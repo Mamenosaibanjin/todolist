@@ -33,6 +33,23 @@ if (isset($_GET['form_todo_submit'])) {
 	$todo = mysqli_query($dbLink, $queryNewTodo); 
 
 	echo "ToDo erfolgreich gespeichert!<br><br>";
+} else if (isset($_GET['action']) && ($_GET['action'] == 'editsave')) {
+
+	$todoName = $_GET['form_todo_name']; 
+	$todoDescription = trim(str_replace("%09", "", $_GET['form_todo_description'])); 
+	$todoProcessing = $_GET['form_todo_processing']; 
+	$todoUpdated = date("Y-m-d H:i:s");
+
+	$queryEditTodo = "UPDATE todo_list SET
+						name = '" . $todoName . "',
+						description = '" . $todoDescription . "', 
+						processing_date = '" . $todoProcessing . "',
+						updated_at = '" . $todoUpdated . "' 
+					  WHERE ID = '" . $_GET['ID'] . "'";
+	
+	$todo = mysqli_query($dbLink, $queryEditTodo); 
+
+	echo "ToDo erfolgreich ge&auml;ndert!<br><br>";
 }
 
 ?>
@@ -51,71 +68,129 @@ $todo = mysqli_query($dbLink, $queryTodo);
 		<th>Bearbeitungsdatum</th>
 		<th>Erstellt</th>
 		<th>Zuletzt bearbeitet</th>
+		<th>Bearbeiten</th>
 	</tr>
-	<?php while ($resultTodo = mysqli_fetch_array($todo)) {?>
-		<tr>
-			<td>
-				<?= $resultTodo['ID']; ?>
-			</td>
-			<td>
-				<?= $resultTodo['name']; ?>
-			</td>
-			<td>
-				<?= $resultTodo['description']; ?>
-			</td>
-			<td>
-				<?= $resultTodo['processing_date']; ?>
-			</td>
-			<td>
-				<?= $resultTodo['created_at']; ?>
-			</td>
-			<td>
-				<?= $resultTodo['updated_at']; ?>
-			</td>
-		</tr>
-	<?php } ?>
+	<?php while ($resultTodo = mysqli_fetch_array($todo)) {
+		if ($_GET['action'] == 'edit') { ?>
+			<form action="todolist.php" METHOD="GET">
+				<input type="hidden" name="action" value="editsave">
+				<tr>
+					<td>
+						<?php if ($_GET['ID'] == $resultTodo['ID']) { ?>
+							<input type="hidden" name="ID" value="<?= $resultTodo['ID']; ?>">
+						<?php } 
+						echo $resultTodo['ID']; ?>
+					</td>
+					<td>
+						<?php if ($_GET['ID'] == $resultTodo['ID']) { ?>
+							<input type="text" name="form_todo_name" value="<?= $resultTodo['name']; ?>">
+						<?php } else { 
+							echo $resultTodo['name'];
+						} ?>
+					</td>
+					<td>
+						<?php if ($_GET['ID'] == $resultTodo['ID']) { ?>
+							<textarea rows="3" cols="20" name="form_todo_description">
+								<?= $resultTodo['description']; ?>
+							</textarea>
+						<?php } else { 
+							echo $resultTodo['description']; 
+						} ?>
+					</td>
+					<td>
+						<?php if ($_GET['ID'] == $resultTodo['ID']) { ?>
+							<input type="date" name="form_todo_processing" value="<?= $resultTodo['processing_date']; ?>">
+						<?php } else { 
+							echo $resultTodo['processing_date']; 
+						} ?>
+					</td>
+					<td>
+						<?= $resultTodo['created_at']; ?>
+					</td>
+					<td>
+						<?= $resultTodo['updated_at']; ?>
+					</td>
+					<td>
+						<?php if ($_GET['ID'] == $resultTodo['ID']) { 
+							echo "<input type='image' src='img/save.png'"; 
+						} else {
+							echo "<a href='todolist.php?action=edit&ID=" . $resultTodo['ID'] . "'><img src='img/edit.png' border=0></a>"; ?>
+						<?php } ?>
+					</td>
+				</tr>
+			</form>
+		<?php } else { ?>
+			<tr>
+				<td>
+					<?= $resultTodo['ID']; ?>
+				</td>
+				<td>
+					<?= $resultTodo['name']; ?>
+				</td>
+				<td>
+					<?= $resultTodo['description']; ?>
+				</td>
+				<td>
+					<?= $resultTodo['processing_date']; ?>
+				</td>
+				<td>
+					<?= $resultTodo['created_at']; ?>
+				</td>
+				<td>
+					<?= $resultTodo['updated_at']; ?>
+				</td>
+				<td>
+					<?= "<a href='todolist.php?action=edit&ID=" . $resultTodo['ID'] . "'><img src='img/edit.png' border=0></a>"; ?>
+				</td>
+			</tr>
+		<?php }	
+	} ?>
 </table>
 
 <br><br>
 
-<form ACTION="todolist.php" METHOD="GET">
-	<table cellpadding="5" cellspacing="0" border="0">
-		<tr>
-			<th>
-				Name der ToDo
-			</th>
-			<td>
-				<input type="text" size="50" maxlength="255" name="form_todo_name">
-			</td>
-		</tr>
+<?php if($_GET['action'] != 'edit') {?>
 
-		<tr>
-			<th>
-				Beschreibung
-			</th>
-			<td>
-				<textarea rows="3" cols="20" name="form_todo_description"></textarea>
-			</td>
-		</tr>
+	<form ACTION="todolist.php" METHOD="GET">
+		<table cellpadding="5" cellspacing="0" border="0">
+			<tr>
+				<th>
+					Name der ToDo
+				</th>
+				<td>
+					<input type="text" size="50" maxlength="255" name="form_todo_name">
+				</td>
+			</tr>
 
-		<tr>
-			<th>
-				Bearbeitungsdatum
-			</th>
-			<td>
-				<input type="date" name="form_todo_processing">
-			</td>
-		</tr>
+			<tr>
+				<th>
+					Beschreibung
+				</th>
+				<td>
+					<textarea rows="3" cols="20" name="form_todo_description"></textarea>
+				</td>
+			</tr>
 
-		<tr>
-			<th>
-				&nbsp;
-			</th>
-			<td>
-				<input type="submit" name="form_todo_submit" value="Formular absenden">
-			</td>
-		</tr>
-	</table>
+			<tr>
+				<th>
+					Bearbeitungsdatum
+				</th>
+				<td>
+					<input type="date" name="form_todo_processing">
+				</td>
+			</tr>
+
+			<tr>
+				<th>
+					&nbsp;
+				</th>
+				<td>
+					<input type="submit" name="form_todo_submit" value="Formular absenden">
+				</td>
+			</tr>
+		</table>
+	</form>
+<?php } ?>
 
 </body>
 </html>
