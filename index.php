@@ -16,5 +16,43 @@ include ("applications_de.php");
 
 <body>
 
+<?php
+$queryTodo = "SELECT * FROM todo_list";
+$todo = mysqli_query($dbLink, $queryTodo); 
+?>
+
+<table cellpadding="10" cellspacing="0" border="1">
+	<tr>
+		<th>#</th>
+		<th>Titel</th>
+		<th>Beschreibung</th>
+		<th>Processing</th>
+		<th>Erstellt</th>
+		<th>Zuletzt bearbeitet</th>
+	</tr>
+	<?php while ($resultTodo = mysqli_fetch_array($todo)) {?>
+		<tr>
+			<td>
+				<?= $resultTodo['ID']; ?>
+			</td>
+			<td>
+				<?= $resultTodo['name']; ?>
+			</td>
+			<td>
+				<?= $resultTodo['description']; ?>
+			</td>
+			<td>
+				<?= $resultTodo['processing_date']; ?>
+			</td>
+			<td>
+				<?= $resultTodo['created_at']; ?>
+			</td>
+			<td>
+				<?= $resultTodo['updated_at']; ?>
+			</td>
+		</tr>
+	<?php } ?>
+</table>
+
 </body>
 </html>
