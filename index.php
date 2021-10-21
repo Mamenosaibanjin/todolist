@@ -23,9 +23,9 @@ function deleteTODO($todo_id, $dbLink) {
    $delete = mysqli_query($dbLink, $queryDeleteTodo);
 
    if (mysqli_affected_rows($dbLink) == 0) {
-   		echo "keine ToDos zum L&ouml;schen gefunden<br><br>";
+   		$alert = "keine ToDos zum L&ouml;schen gefunden";
    } else {
-		echo "ToDo " . $todo_id . " erfolgreich gel&ouml;scht<br><br>";
+		$alert = "ToDo " . $todo_id . " erfolgreich gel&ouml;scht";
    }
 }
 
@@ -43,7 +43,7 @@ if (isset($_GET['form_todo_submit'])) {
 
 	$todo = mysqli_query($dbLink, $queryNewTodo); 
 
-	echo "ToDo erfolgreich gespeichert!<br><br>";
+	$alert = "ToDo erfolgreich gespeichert!";
 
 } else if (isset($_GET['action']) && ($_GET['action'] == 'editsave')) {
 
@@ -61,7 +61,7 @@ if (isset($_GET['form_todo_submit'])) {
 	
 	$todo = mysqli_query($dbLink, $queryEditTodo); 
 
-	echo "ToDo erfolgreich ge&auml;ndert!<br><br>";
+	$alert = "ToDo erfolgreich ge&auml;ndert!";
 
 } else if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
 	deleteTODO($_GET['ID'], $dbLink);
@@ -79,8 +79,10 @@ $todo = mysqli_query($dbLink, $queryTodo);
 
 	<div class="limiter">
 		<div class="container-table100">
+			<div style="position: absolute; top: 30px; font-weight: bold;">
+			<?= $alert; ?>
+			</div>
 			<div class="wrap-table100">
-
 				<div class="table">
 					<div class="row header">
 						<div class="cell">#</div>
