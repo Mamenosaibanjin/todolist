@@ -3,14 +3,14 @@ define('HOSTNAME', 'localhost');
 define('USERNAME', 'root');
 define('PASSWORD', '');
 define('DATABASE', 'todo');
-$dbLink = mysql_connect(HOSTNAME, USERNAME, PASSWORD) or
+$dbLink = mysqli_connect(HOSTNAME, USERNAME, PASSWORD) or
 die("Konnte DB-Server nicht erreichen");
 
-mysql_query("SET character_set_results=utf8", $dbLink);
+mysqli_query($dbLink, "SET character_set_results=utf8");
 mb_language('uni');
 mb_internal_encoding('UTF-8');
-mysql_select_db(DATABASE, $dbLink) or
+mysqli_select_db($dbLink, DATABASE) or
 die("Konnte Datenbank nicht auswählen");
 
-mysql_query("set names 'utf8'",$dbLink);
+mysqli_query($dbLink, "set names 'utf8'");
 ?>
