@@ -18,6 +18,17 @@ include ("applications_de.php");
 
 <?php 
 
+function deleteTODO($todo_id, $dbLink) {
+   $queryDeleteTodo = "DELETE FROM todo_list WHERE ID = '" . $_GET['ID'] . "'";
+   $delete = mysqli_query($dbLink, $queryDeleteTodo);
+
+   if (mysqli_affected_rows($dbLink) == 0) {
+   		echo "keine ToDos zum L&ouml;schen gefunden<br><br>";
+   } else {
+		echo "ToDo " . $todo_id . " erfolgreich gel&ouml;scht<br><br>";
+   }
+}
+
 if (isset($_GET['form_todo_submit'])) {
 
 	$todoName = $_GET['form_todo_name']; 
@@ -33,6 +44,7 @@ if (isset($_GET['form_todo_submit'])) {
 	$todo = mysqli_query($dbLink, $queryNewTodo); 
 
 	echo "ToDo erfolgreich gespeichert!<br><br>";
+
 } else if (isset($_GET['action']) && ($_GET['action'] == 'editsave')) {
 
 	$todoName = $_GET['form_todo_name']; 
@@ -50,6 +62,9 @@ if (isset($_GET['form_todo_submit'])) {
 	$todo = mysqli_query($dbLink, $queryEditTodo); 
 
 	echo "ToDo erfolgreich ge&auml;ndert!<br><br>";
+
+} else if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
+	deleteTODO($_GET['ID'], $dbLink);
 }
 
 ?>
@@ -71,7 +86,7 @@ $todo = mysqli_query($dbLink, $queryTodo);
 		<th>Bearbeiten</th>
 	</tr>
 	<?php while ($resultTodo = mysqli_fetch_array($todo)) {
-		if ($_GET['action'] == 'edit') { ?>
+		if (isset($_GET['action']) && $_GET['action'] == 'edit') { ?>
 			<form action="todolist.php" METHOD="GET">
 				<input type="hidden" name="action" value="editsave">
 				<tr>
@@ -114,7 +129,8 @@ $todo = mysqli_query($dbLink, $queryTodo);
 						<?php if ($_GET['ID'] == $resultTodo['ID']) { 
 							echo "<input type='image' src='img/save.png'"; 
 						} else {
-							echo "<a href='todolist.php?action=edit&ID=" . $resultTodo['ID'] . "'><img src='img/edit.png' border=0></a>"; ?>
+							echo "<a href='todolist.php?action=edit&ID=" . $resultTodo['ID'] . "'><img src='img/edit.png' border=0></a>
+								  <a href='todolist.php?action=delete&ID=" . $resultTodo['ID'] . "'><img src='img/delete.png' border=0></a>"; ?>
 						<?php } ?>
 					</td>
 				</tr>
@@ -140,7 +156,8 @@ $todo = mysqli_query($dbLink, $queryTodo);
 					<?= $resultTodo['updated_at']; ?>
 				</td>
 				<td>
-					<?= "<a href='todolist.php?action=edit&ID=" . $resultTodo['ID'] . "'><img src='img/edit.png' border=0></a>"; ?>
+					<?= "<a href='todolist.php?action=edit&ID=" . $resultTodo['ID'] . "'><img src='img/edit.png' border=0></a>
+					     <a href='todolist.php?action=delete&ID=" . $resultTodo['ID'] . "'><img src='img/delete.png' border=0></a>"; ?>
 				</td>
 			</tr>
 		<?php }	
@@ -149,7 +166,7 @@ $todo = mysqli_query($dbLink, $queryTodo);
 
 <br><br>
 
-<?php if($_GET['action'] != 'edit') {?>
+<?php if(isset($_GET['action']) && $_GET['action'] != 'edit') {?>
 
 	<form ACTION="todolist.php" METHOD="GET">
 		<table cellpadding="5" cellspacing="0" border="0">
