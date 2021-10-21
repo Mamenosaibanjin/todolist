@@ -186,7 +186,7 @@ $todo = mysqli_query($dbLink, $queryTodo);
 								<div class="cell">&nbsp;</div>
 								<div class="cell">&nbsp;</div>
 								<div class="cell">
-									<input type='image' src='img/save.png' name="form_todo_submit" value="Formular absenden">
+									<input type='submit' name="form_todo_submit" value="absenden">
 								</div>
 							</div>
 				<?php } ?>
