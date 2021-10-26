@@ -113,7 +113,7 @@ iframe {
 }
 
 .wrap-table100 {
-  width: 960px;
+  width: 1180px;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -203,7 +203,7 @@ iframe {
 }
 
 .row .cell:nth-child(1) {
-  width: 70px;
+  width: 100px;
   padding-left: 40px;
 }
 
@@ -212,19 +212,19 @@ iframe {
 }
 
 .row .cell:nth-child(3) {
-  width: 250px;
+  width: 270px;
 }
 
 .row .cell:nth-child(4) {
-  width: 140px;
+  width: 235px;
 }
 
 .row .cell:nth-child(5) {
-  width: 130px;
+  width: 115px;
 }
 
 .row .cell:nth-child(6) {
-  width: 13 0px;
+  width: 210px;
 }
 
 .row .cell:nth-child(7) {
