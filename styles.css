@@ -236,11 +236,11 @@ iframe {
   width: 100% !important;
 }
 
-.row:hover {
+/*.row:hover {
   background-color: #ececff;
   cursor: pointer;
 }
-
+*/
 @media (max-width: 768px) {
   .row {
     border-bottom: 1px solid #f2f2f2;
