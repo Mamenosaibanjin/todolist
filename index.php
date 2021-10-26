@@ -11,12 +11,16 @@ include ("applications_de.php");
 <link rel="stylesheet" href="css/styles.css" type="text/css" />
 <script type="text/javascript" src="js/ajax.js"></script>
 <script type="text/javascript" src="js/libs.js"></script>
+
+
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 
 <body>
 
 <?php 
+
+$alert = "";
 
 function deleteTODO($todo_id, $dbLink) {
    $queryDeleteTodo = "DELETE FROM todo_list WHERE ID = '" . $_GET['ID'] . "'";
@@ -71,7 +75,63 @@ if (isset($_GET['form_todo_submit'])) {
 
 
 <?php
-$queryTodo = "SELECT * FROM todo_list";
+
+$order = "";
+$sorting = "";
+
+if (isset($_GET['s'])) {
+	switch($_GET['s']) 
+	{
+		case ("n"):
+		$order = " ORDER BY ID";
+		break;
+
+		case ("t"):
+		$order = " ORDER BY name";
+		break;
+
+		case ("b"):
+		$order = " ORDER BY description";
+		break;
+
+		case ("bd"):
+		$order = " ORDER BY processing_date";
+		break;
+
+		case ("e"):
+		$order = " ORDER BY created_at";
+		break;
+
+		case ("zb"):
+		$order = " ORDER BY updated_at";
+		break;
+
+		default:
+		$order = "";
+		break;
+	}
+
+}
+
+if (isset($_GET['ud'])) {
+	switch($_GET['ud']) 
+	{
+		case ("u"):
+		$sorting = " ASC";
+		break;
+
+		case ("d"):
+		$sorting = " DESC";
+		break;
+
+		default:
+		$sorting = "";
+		break;
+	}
+
+}
+
+$queryTodo = "SELECT * FROM todo_list" . $order . $sorting;
 $todo = mysqli_query($dbLink, $queryTodo); 
 ?>
 
@@ -85,12 +145,12 @@ $todo = mysqli_query($dbLink, $queryTodo);
 			<div class="wrap-table100">
 				<div class="table">
 					<div class="row header">
-						<div class="cell">#</div>
-						<div class="cell">Titel</div>
-						<div class="cell">Beschreibung</div>
-						<div class="cell">Bearbeitungs- datum</div>
-						<div class="cell">Erstellt</div>
-						<div class="cell">Zuletzt bearbeitet</div>
+						<div class="cell"># <a href="todolist.php?s=n&ud=u"><img src="img/up.png" border="0"></a> <a href="todolist.php?s=n&ud=d"><img src="img/down.png" border="0"></a></div>
+						<div class="cell">Titel <a href="todolist.php?s=t&ud=u"><img src="img/up.png" border="0"></a> <a href="todolist.php?s=t&ud=d"><img src="img/down.png" border="0"></a></div>
+						<div class="cell">Beschreibung <a href="todolist.php?s=b&ud=u"><img src="img/up.png" border="0"></a> <a href="todolist.php?s=b&ud=d"><img src="img/down.png" border="0"></a></div>
+						<div class="cell">Bearbeitungsdatum <a href="todolist.php?s=bd&ud=u"><img src="img/up.png" border="0"></a> <a href="todolist.php?s=bd&ud=d"><img src="img/down.png" border="0"></a></div>
+						<div class="cell">Erstellt <a href="todolist.php?s=e&ud=u"><img src="img/up.png" border="0"></a> <a href="todolist.php?s=e&ud=d"><img src="img/down.png" border="0"></a></div>
+						<div class="cell">Zuletzt bearbeitet <a href="todolist.php?s=zb&ud=u"><img src="img/up.png" border="0"></a> <a href="todolist.php?s=zb&ud=d"><img src="img/down.png" border="0"></a></div>
 						<div class="cell">Aktion</div>
 					</div>
 					<?php while ($resultTodo = mysqli_fetch_array($todo)) {
